@@ -1,4 +1,4 @@
-package com.wilsut.footballleague.main
+package com.wilsut.footballleague.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -6,28 +6,35 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.squareup.picasso.Picasso
 import com.wilsut.footballleague.R.id.team_badge
 import com.wilsut.footballleague.R.id.team_name
-import com.wilsut.footballleague.model.League
+import com.squareup.picasso.Picasso
+import com.wilsut.footballleague.model.Team
 import org.jetbrains.anko.*
 
-class MainAdapter(private val leagues: List<League>, private val listener: (League) -> Unit) :
-    RecyclerView.Adapter<LeagueViewHolder>() {
+class LeagueAdapter(private val teams: List<Team>, private val listener: (Team) -> Unit) :
+    RecyclerView.Adapter<TeamViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LeagueViewHolder {
-        return LeagueViewHolder(LeagueUI().createView(AnkoContext.create(parent.context, parent)))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TeamViewHolder {
+        return TeamViewHolder(
+            TeamUI().createView(
+                AnkoContext.create(
+                    parent.context,
+                    parent
+                )
+            )
+        )
     }
 
-    override fun onBindViewHolder(holder: LeagueViewHolder, position: Int) {
-        holder.bindItem(leagues[position], listener)
+    override fun onBindViewHolder(holder: TeamViewHolder, position: Int) {
+        holder.bindItem(teams[position], listener)
     }
 
-    override fun getItemCount(): Int = leagues.size
+    override fun getItemCount(): Int = teams.size
 
 }
 
-class LeagueUI : AnkoComponent<ViewGroup> {
+class TeamUI : AnkoComponent<ViewGroup> {
     override fun createView(ui: AnkoContext<ViewGroup>): View {
         return with(ui) {
             linearLayout {
@@ -55,16 +62,16 @@ class LeagueUI : AnkoComponent<ViewGroup> {
 
 }
 
-class LeagueViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class TeamViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val teamBadge: ImageView = view.find(team_badge)
     private val teamName: TextView = view.find(team_name)
 
-    fun bindItem(leagues: League, listener: (League) -> Unit) {
-        Picasso.get().load(leagues.badge).into(teamBadge)
-        teamName.text = leagues.league
+    fun bindItem(teams: Team, listener: (Team) -> Unit) {
+        Picasso.get().load(teams.teamBadge).into(teamBadge)
+        teamName.text = teams.teamName
         itemView.setOnClickListener {
-            listener(leagues)
+            listener(teams)
         }
     }
 }

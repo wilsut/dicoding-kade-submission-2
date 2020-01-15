@@ -1,94 +1,88 @@
 package com.wilsut.footballleague.main
 
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
+import android.support.v4.app.FragmentTabHost
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.*
-import com.google.gson.Gson
-import com.wilsut.footballleague.R.array.league
-import com.wilsut.footballleague.R.color.colorAccent
-import com.wilsut.footballleague.api.ApiRepository
-import com.wilsut.footballleague.model.Team
-import com.wilsut.footballleague.util.invisible
-import com.wilsut.footballleague.util.visible
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import com.wilsut.footballleague.fragment.NextEventFragment
+import com.wilsut.footballleague.fragment.PreviousEventFragment
+import com.wilsut.footballleague.fragment.SearchEventFragment
 import org.jetbrains.anko.*
-import org.jetbrains.anko.recyclerview.v7.recyclerView
-import org.jetbrains.anko.support.v4.onRefresh
-import org.jetbrains.anko.support.v4.swipeRefreshLayout
+import org.jetbrains.anko.support.v4.fragmentTabHost
 
-class LeagueActivity : AppCompatActivity(), LeagueView {
-
-    private var teams: MutableList<Team> = mutableListOf()
-    private lateinit var presenter: LeaguePresenter
-    private lateinit var adapter: LeagueAdapter
-    private lateinit var listTeam: RecyclerView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var swipeRefresh: SwipeRefreshLayout
-    private lateinit var leagueName: String
+class LeagueActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        leagueName = intent.getStringExtra("league_name")
-        linearLayout {
-            lparams(width = matchParent, height = wrapContent)
-            orientation = LinearLayout.VERTICAL
-            topPadding = dip(16)
-            leftPadding = dip(16)
-            rightPadding = dip(16)
+        LeagueActivityUI().setContentView(this)
+    }
 
-            swipeRefresh = swipeRefreshLayout {
-                setColorSchemeResources(
-                    colorAccent,
-                    android.R.color.holo_green_light,
-                    android.R.color.holo_orange_light,
-                    android.R.color.holo_red_light
-                )
+    inner class LeagueActivityUI : AnkoComponent<LeagueActivity> {
 
-                relativeLayout {
-                    lparams(width = matchParent, height = wrapContent)
+        private lateinit var frameTab: FrameLayout
+        private lateinit var tabHost: FragmentTabHost
+        private lateinit var leagueName: String
+        private lateinit var idLeague: String
 
-                    listTeam = recyclerView {
-                        lparams(width = matchParent, height = wrapContent)
-                        layoutManager = LinearLayoutManager(context)
-                    }
+        override fun createView(ui: AnkoContext<LeagueActivity>) = with(ui) {
+            linearLayout {
+                lparams(matchParent, matchParent) {
+                    orientation = LinearLayout.VERTICAL
+                }
 
-                    progressBar = progressBar {
-                    }.lparams {
-                        centerHorizontally()
+                tabHost = fragmentTabHost {
+                    id = android.R.id.tabhost
+
+                    linearLayout {
+                        orientation = LinearLayout.VERTICAL
+                        lparams(matchParent, matchParent)
+
+                        horizontalScrollView {
+                            lparams(matchParent, wrapContent)
+
+                            tabWidget {
+                                id = android.R.id.tabs
+                            }
+                        }
+
+                        frameLayout {
+                            id = android.R.id.tabcontent
+                        }
+
+                        frameTab = frameLayout {
+                            id = android.R.id.tabcontent
+                        }
                     }
                 }
+
+                leagueName = intent.getStringExtra("league_name")
+                idLeague = intent.getStringExtra("id_league")
+                val bundle = Bundle()
+                bundle.putString("league_name", leagueName)
+                bundle.putString("id_league", idLeague)
+                tabHost.setup(ctx, supportFragmentManager, android.R.id.tabcontent)
+                tabHost.addTab(
+                    tabHost.newTabSpec("Team")
+                        .setIndicator("Team"),
+                    TeamFragment::class.java, bundle
+                )
+                tabHost.addTab(
+                    tabHost.newTabSpec("Search Match")
+                        .setIndicator("Search Match"),
+                    SearchEventFragment::class.java, bundle
+                )
+                tabHost.addTab(
+                    tabHost.newTabSpec("Previous Match")
+                        .setIndicator("Previous Match"),
+                    PreviousEventFragment::class.java, bundle
+                )
+                tabHost.addTab(
+                    tabHost.newTabSpec("Next Match")
+                        .setIndicator("Next Match"),
+                    NextEventFragment::class.java, bundle
+                )
             }
         }
-
-        adapter = LeagueAdapter(teams)
-        listTeam.adapter = adapter
-
-        val request = ApiRepository()
-        val gson = Gson()
-        presenter = LeaguePresenter(this, request, gson)
-
-        presenter.getTeamList(leagueName)
-
-        swipeRefresh.onRefresh {
-            presenter.getTeamList(leagueName)
-        }
-    }
-
-    override fun showLoading() {
-        progressBar.visible()
-    }
-
-    override fun hideLoading() {
-        progressBar.invisible()
-    }
-
-    override fun showTeamList(data: List<Team>) {
-        swipeRefresh.isRefreshing = false
-        teams.clear()
-        teams.addAll(data)
-        adapter.notifyDataSetChanged()
     }
 }

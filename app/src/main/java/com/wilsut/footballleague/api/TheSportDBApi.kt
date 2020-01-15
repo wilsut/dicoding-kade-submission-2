@@ -29,7 +29,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getNextMatch(idLeague: String?): String {
+    fun getNextEvents(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -41,7 +41,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getPreviousMatch(idLeague: String?): String {
+    fun getPreviousEvents(idLeague: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -53,7 +53,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun getMatch(idEvent: String?): String {
+    fun getEvent(idEvent: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")
@@ -65,7 +65,7 @@ object TheSportDBApi {
             .toString()
     }
 
-    fun searchMatches(query: String?): String {
+    fun searchEvents(query: String?): String {
         return Uri.parse(BuildConfig.BASE_URL).buildUpon()
             .appendPath("api")
             .appendPath("v1")

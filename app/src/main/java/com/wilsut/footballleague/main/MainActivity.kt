@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 import com.wilsut.footballleague.R
+import com.wilsut.footballleague.adapter.MainAdapter
 import com.wilsut.footballleague.model.League
 import org.jetbrains.anko.*
 import org.jetbrains.anko.recyclerview.v7.recyclerView
@@ -39,7 +40,8 @@ class MainActivity : AppCompatActivity() {
         adapter = MainAdapter(leagues)
         {
             startActivity<LeagueActivity>(
-                "league_name" to it.league
+                "league_name" to it.league,
+                "id_league" to it.leagueId
             )
         }
         listLeague.adapter = adapter
@@ -48,14 +50,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        val id = resources.getStringArray(R.array.id)
+        val id = resources.getIntArray(R.array.id)
         val name = resources.getStringArray(R.array.league)
         val badge = resources.getStringArray(R.array.badge)
         leagues.clear()
         for (i in name.indices) {
             leagues.add(
                 League(
-                    leagueId = id[i],
+                    leagueId = id[i].toString(),
                     league = name[i],
                     badge = badge[i]
                 )

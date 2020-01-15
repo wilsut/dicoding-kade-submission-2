@@ -3,15 +3,8 @@ package com.wilsut.footballleague.model
 import com.google.gson.annotations.SerializedName
 
 data class League(
-    @SerializedName("idLeague")
-    var leagueId: String? = null,
-
-    @SerializedName("strLeague")
-    var league: String? = null,
-
-    @SerializedName("strCountry")
-    var country: String? = null,
-
-    @SerializedName("strBadge")
-    var badge: String? = null
+    @SerializedName("idLeague") val leagueId: String? = null,
+    @SerializedName("strLeague") val league: String? = null,
+    @SerializedName("strCountry") val country: String? = null,
+    @SerializedName("strBadge") val badge: String? = null
 )
