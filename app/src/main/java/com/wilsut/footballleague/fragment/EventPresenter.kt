@@ -1,6 +1,5 @@
 package com.wilsut.footballleague.fragment
 
-import android.util.Log
 import com.google.gson.Gson
 import com.wilsut.footballleague.api.ApiRepository
 import com.wilsut.footballleague.api.TheSportDBApi
@@ -47,7 +46,6 @@ class EventPresenter(
     }
 
     fun searchEvents(query: String?) {
-        Log.e("query", query)
         view.showLoading()
         doAsync {
             val data = gson.fromJson(

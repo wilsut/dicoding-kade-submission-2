@@ -98,11 +98,12 @@ class SearchEventFragment : Fragment(), EventView {
 
                 searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
+                        presenter.searchEvents(query)
                         return true
                     }
 
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        presenter.searchEvents(newText)
+//                        presenter.searchEvents(newText)
                         return true
                     }
                 })
@@ -121,7 +122,7 @@ class SearchEventFragment : Fragment(), EventView {
     override fun showEventList(data: List<Event>) {
         swipeRefresh.isRefreshing = false
         events.clear()
-        events.addAll(data)
+        events.addAll(data.filter { it.sport.equals("Soccer") })
         adapter.notifyDataSetChanged()
     }
 }

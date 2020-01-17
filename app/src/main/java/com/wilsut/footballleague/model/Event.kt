@@ -29,5 +29,6 @@ data class Event(
     @SerializedName("strAwayLineupMidfield") val awayLineMid: String? = null,
     @SerializedName("strAwayLineupForward") val awayLineFor: String? = null,
     @SerializedName("strAwayLineupSubstitutes") val awaySubs: String? = null,
-    @SerializedName("dateEvent") val dateEvent: String? = null
+    @SerializedName("dateEvent") val dateEvent: String? = null,
+    @SerializedName("strSport") val sport: String? = null
 ) : Parcelable
