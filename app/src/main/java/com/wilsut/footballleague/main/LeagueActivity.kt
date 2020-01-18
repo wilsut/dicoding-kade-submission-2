@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTabHost
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import com.wilsut.footballleague.fragment.LeagueDetailFragment
 import com.wilsut.footballleague.fragment.NextEventFragment
 import com.wilsut.footballleague.fragment.PreviousEventFragment
 import com.wilsut.footballleague.fragment.SearchEventFragment
@@ -58,14 +59,21 @@ class LeagueActivity : AppCompatActivity() {
 
                 leagueName = intent.getStringExtra("league_name")
                 idLeague = intent.getStringExtra("id_league")
+                val badge = intent.getStringExtra("badge")
                 val bundle = Bundle()
                 bundle.putString("league_name", leagueName)
                 bundle.putString("id_league", idLeague)
+                bundle.putString("badge", badge)
                 tabHost.setup(ctx, supportFragmentManager, android.R.id.tabcontent)
                 tabHost.addTab(
                     tabHost.newTabSpec("Team")
                         .setIndicator("Team"),
                     TeamFragment::class.java, bundle
+                )
+                tabHost.addTab(
+                    tabHost.newTabSpec("Detail")
+                        .setIndicator("Detail"),
+                    LeagueDetailFragment::class.java, bundle
                 )
                 tabHost.addTab(
                     tabHost.newTabSpec("Search Match")

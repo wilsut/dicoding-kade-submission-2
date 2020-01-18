@@ -41,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         {
             startActivity<LeagueActivity>(
                 "league_name" to it.league,
-                "id_league" to it.leagueId
+                "id_league" to it.leagueId,
+                "badge" to it.badge
             )
         }
         listLeague.adapter = adapter
